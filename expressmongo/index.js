@@ -13,6 +13,6 @@ app.use(cors());
 
 // test route
 async function main() {
-  let db = await Connectmongo.connect(mongoUrl, "DonDonDonki");
+  let db = await Connectmongo.connect(MONGODATABASEURL, "DonDonDonki");
   console.log("Database up and running");
 }
