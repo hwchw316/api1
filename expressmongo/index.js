@@ -17,7 +17,20 @@ async function main() {
   console.log("Database up and running");
 
 
+  // GET - Fetch information
+  //https://3001-aquamarine-squirrel-aqecmusb.ws-us03.gitpod.io/read_ingredients
+  app.get("/read_ingredients", async (req, res) => {
+    let tasks = await db
+      .collection("ingredients")
+      .find()
+      .toArray();
+    res.status(200);
+    res.send(tasks);
+  });
+
+
   // POST 
+  //https://3001-aquamarine-squirrel-aqecmusb.ws-us03.gitpod.io/add_user
   app.post("/add_user", async (req, res) => {
     let userid = req.body.userid;
     let email = req.body.email;
@@ -31,11 +44,34 @@ async function main() {
     } catch (e) {
       res.status(500);
       res.send({
-        message: "Sia la, unable to insert data."
+        message: "User unable to be added."
       });
       console.log(e);
     }
   });
+  // POST 
+  //https://3001-aquamarine-squirrel-aqecmusb.ws-us03.gitpod.io/add_ingredients
+  app.post("/add_ingredients", async (req, res) => {
+    let name = req.body.name;
+    let price = req.body.price;
+    let imgurl = req.body.imgurl;
+    try {
+      let result = await db.collection("ingredients").insertOne({
+        'name ': name,
+        'price': price,
+        'imgurl': imgurl
+      });
+      res.status(200);
+      res.send(result.ops[0]);
+    } catch (e) {
+      res.status(500);
+      res.send({
+        message: "Ingredient not being accepted."
+      });
+      console.log(e);
+    }
+  });
+
 }
 main();
 // RUN SERVER
