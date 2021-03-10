@@ -13,12 +13,31 @@ app.use(cors());
 
 // test route
 async function main() {
-  let db = await MongoUtil.connect(mongoUrl, "DonDonDonki");
+  let db = await MongoUtil.connect(mongoUrl, "Donki_Database");
   console.log("Database up and running");
+
+
+  // POST 
+  app.post("/add_user", async (req, res) => {
+    let userid = req.body.userid;
+    let email = req.body.email;
+    try {
+      let result = await db.collection("users").insertOne({
+        'userid': userid,
+        'email': email
+      });
+      res.status(200);
+      res.send(result.ops[0]);
+    } catch (e) {
+      res.status(500);
+      res.send({
+        message: "Sia la, unable to insert data."
+      });
+      console.log(e);
+    }
+  });
 }
-
 main();
-
 // RUN SERVER
 app.listen(3001, () => {
   console.log("Server has started");
